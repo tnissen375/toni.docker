@@ -1,0 +1,17 @@
+---
+# For prometheus-node-exporter
+- name: Create node-exporter directory
+  file:
+    state: directory
+    path: "{{ user_path }}/node-exporter/"
+
+- name: Generate docker-compose.yml file for node-exporter
+  tags: node-exporter
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ user_path }}/node-exporter/docker-compose.yml"
+
+- name: Launch node-exporter exporter
+  tags: node-exporter
+  docker_compose:
+    project_src: "{{ user_path }}/node-exporter"

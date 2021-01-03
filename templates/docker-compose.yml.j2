@@ -1,0 +1,16 @@
+version: '3.2'
+services:
+  node_exporter:
+    container_name: node_exporter
+    image: {{ node_exporter_image }}
+    command:
+    - "--path.rootfs=/host"
+    - "--web.listen-address={{ node_exporter_ip }}:{{ node_exporter_port }}"
+    network_mode: "host"
+    pid: "host"
+    volumes:
+    - type: "bind"
+      source: "/"
+      target: "/host"
+      read_only: true
+    restart: unless-stopped

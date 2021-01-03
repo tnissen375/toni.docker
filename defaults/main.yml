@@ -1,0 +1,32 @@
+---
+user_path: "/root"
+docker_setup_networks: 'true'
+docker_network_driver: 'bridge'
+docker_network_encrypted: 'false'
+node_exporter_ip: '127.0.0.1'
+node_exporter_port: 9100
+# Always check if there is a newer stable release:
+# https://hub.docker.com/r/prom/node-exporter/tags
+node_exporter_image: "prom/node-exporter:v1.0.1"
+configure_monitoring: false
+
+users: []
+ipam_driver_options:
+   encrypted: "{{ docker_network_encrypted }}"
+
+#Version can be choosen
+docker_apt_packages: 
+   - docker-ce
+#   - docker-ce=5:19.03.14~3-0~ubuntu-focal
+   - docker-ce-cli
+   - containerd.io
+   - docker-compose
+
+docker_pip_packages:
+#   - docker
+#   - docker-compose
+   - jsondiff #docker-stack
+
+docker_networks:
+  - { name: "nginx_net", subnet: "10.10.10.0/24", driver: "{{ docker_network_driver }}", internal: 'no', gateway: "" }
+  - { name: "stack_com", subnet: "10.10.11.0/24", driver: "{{ docker_network_driver }}", internal: 'no', gateway: "" }

@@ -1,0 +1,5 @@
+---
+- name: restart node-exporter
+  docker_compose:
+    project_src: "{{ user_path }}/node-exporter"
+    restarted: yes

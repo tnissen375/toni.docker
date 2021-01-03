@@ -1,0 +1,26 @@
+---
+# Throws an error if network is in use
+- name: Remove networks if exists
+  when: docker_setup_networks|bool
+  docker_network:
+    name: "{{ item.name }}"
+    state: absent
+  ignore_errors: true
+  loop:
+    "{{ docker_networks }}"
+
+- name: Setup networks
+  when: docker_setup_networks|bool
+  docker_network:
+    name: "{{ item.name }}"
+    state: present
+    #enable_ipv6: yes
+    internal: "{{ item.internal }}" 
+    driver: "{{ item.driver }}"
+    ipam_driver_options: "{{ ipam_driver_options }}"
+    ipam_config:
+      - subnet: "{{ item.subnet }}"
+      #- subnet: fdd1:ac8c:0557:7ce2::/64
+  ignore_errors: true
+  loop:
+    "{{ docker_networks }}"
