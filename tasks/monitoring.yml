@@ -11,7 +11,23 @@
     src: docker-compose.yml.j2
     dest: "{{ user_path }}/node-exporter/docker-compose.yml"
 
-- name: Launch node-exporter exporter
+# - debug:
+#     msg: "{{ ansible_distribution }} {{ ansible_distribution_major_version }}"
+
+- name: Launch node-exporter 
   tags: node-exporter
+  when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_major_version | int > 16)
   docker_compose:
     project_src: "{{ user_path }}/node-exporter"
+
+# I m not able to install python in a way that docker-compose is installable by pip
+# So this is for BBB Servers only - until BBB 2.3 arrives
+- name: Remove node-exporter (Ubuntu 16)
+  shell: docker-compose 
+        -f {{ user_path }}/node-exporter/docker-compose.yml down
+  when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_major_version | int < 18)
+
+- name: Launch node-exporter (Ubuntu 16)
+  shell: docker-compose 
+        -f {{ user_path }}/node-exporter/docker-compose.yml up -d
+  when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_major_version | int < 18)
