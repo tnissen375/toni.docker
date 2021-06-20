@@ -1,4 +1,13 @@
 ---
+- name: Ensure additional pip docker packages are installed
+  pip:
+    name: "{{ item }}"
+    state: latest
+  ignore_errors: yes
+  when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_major_version | int > 16)
+  loop:
+    "{{ docker_pip_packages }}"
+
 - name: Install Docker Swarm
   when: docker_network_driver is defined and docker_network_driver=="overlay"
   include_role: { name: atosatto.docker-swarm } 
@@ -15,15 +24,6 @@
     python_pip_packages: "docker"
 
 - include_tasks: "create_network.yml"
-
-- name: Ensure additional pip docker packages are installed
-  pip:
-    name: "{{ item }}"
-    state: latest
-  ignore_errors: yes
-  when: (ansible_distribution == 'Ubuntu') and (ansible_distribution_major_version | int > 16)
-  loop:
-    "{{ docker_pip_packages }}"
 
 - name: Setup node_exporter
   import_tasks: monitoring.yml
