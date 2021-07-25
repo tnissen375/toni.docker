@@ -10,6 +10,9 @@ node_exporter_port: 9100
 node_exporter_image: "prom/node-exporter:v1.1.1"
 configure_monitoring: false
 swarm_interface: "wg0"
+ipv6_fixed_cidr: "fd00::/80"
+enable_ipv6: true
+#"2a01:04f8:0151:7422:21::/80"
 
 users: []
 ipam_driver_options:
