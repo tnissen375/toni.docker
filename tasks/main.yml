@@ -39,7 +39,7 @@
 - name: Stop docker deamon
   service:
     name: docker
-    state: absent
+    state: stopped
   become: true
 
 - name: Start docker deamon
